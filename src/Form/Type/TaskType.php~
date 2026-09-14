@@ -16,7 +16,6 @@ class TaskType extends AbstractType
             ->add('time_signature', TextType::class)
             ->add('key_signature', TextType::class)
             ->add('pic', TextType::class)
-            ->add('myscore', TextType::class)
             ->add('sender_name', TextType::class)
             ->add('receiver_name', TextType::class)
             ->add('receiver_email', TextType::class)
