@@ -31,7 +31,7 @@ class TaskController extends AbstractController
             );
         }
 
-        return new Response('Check out this great product: '.$product->getTimeSignature());
+        //return new Response('Check out this great product: '.$product->getTimeSignature());
 
         // or render a template
         // in the template, print things with {{ product.name }}
@@ -73,47 +73,34 @@ class TaskController extends AbstractController
             fwrite($myfile, "<lilypond staffsize=34>" . $contents . "</lilypond>");
             fclose($myfile);
 
-            $p1=["lilypond-book", __DIR__ . "/../../public/scores/scoretosend_myscore_sample_" . $myid . ".html", "-f", "html", "--output", "static/scores/samplescorescoretosend_myscore" . $myid];
+            ob_start();
+
+
+	    
+            $p1=["lilypond", "-dclip-systems", "--png", __DIR__ . "/../../public/scores/scoretosend_myscore_sample_" . $myid . ".ly"];
 	    
 
-            $handle = popen(join(" ", $p1), 'r');
-            if ($handle === false) {
-                exit("Failed to open process");
-            }
-
-            while (!feof($handle)) {
-                echo fgets($handle);
-            }
-
-            pclose($handle);
-	    $file_pointer = fopen(__DIR__ . "/../../public/scores/samplescorescoretosend_myscore" . $myid . "/scoretosend_myscore_sample_" . $myid . ".html", "r") or die("Unable to open file!");
-            $htmlString= fread($file_pointer, filesize(__DIR__ . "/static/scores/samplescorescoretosend_myscore" . $myid . "/scoretosend_myscore_sample_" . $myid . ".html"));
-            fclose($file_pointer);
-            $doc = new DOMDocument();
-            $doc->loadHTML($htmlString);
-            $xpath = new DOMXPath($doc);
-
-            $titles = $xpath->evaluate('//img');
-	    $picvalue="";
-            foreach ($titles as $title) {
-                $picvalue= $title->src . PHP_EOL;
-                echo $title->src . PHP_EOL;
-            }
-	    $realpicvalue="samplescorescoretosend_myscore"+mylastrowid+"/"+$picvalue;
+            $dir = shell_exec(join(" ", $p1));
+            if (is_null($dir))
+            {
+		    echo "hop";
+	    } else {
+		    echo "hopopop";
+            $realpicvalue= "scoretosend_myscore_sample_" . $myid . ".png";
+            $task = $entityManager->getRepository(ScoreToSend::class)->find($myid);
+		    
             $task->setPic($realpicvalue);
-	    $entityManager->persist($task);
 	    $entityManager->flush();
-	    
-	    
-	    
-	    
-	    
-	    
+
+	    }
+
+            ob_end_clean();   // get rid of the evidence :-)
+            return $this->redirectToRoute('task_success', ["id" => $myid]);
 
             // ... perform some action, such as saving the task to the database
 
 
-            return $this->redirectToRoute('task_success', ["id" => $myid]);
+
         }
 
         return $this->render('task/new.html.twig', [

@@ -17,7 +17,7 @@ class ScoreToSend
     public ?string $time_signature = null;
 
     #[ORM\Column(length: 255)]
-    public ?string $key_signature = null;
+    private ?string $key_signature = null;
 
     #[ORM\Column(length: 255)]
     private ?string $myscore = null;

@@ -4,7 +4,7 @@
 %%http://www.gnu.org/software/denemo/
 
 \version "2.20.0"
-#(set-default-paper-size "a6" 'landscape)
+#(set-default-paper-size "a6")
 
 
 CompactChordSymbols = {}

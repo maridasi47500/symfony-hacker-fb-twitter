@@ -4,8 +4,6 @@
 %%http://www.gnu.org/software/denemo/
 
 \version "2.20.0"
-#(set-default-paper-size "a6" 'landscape)
-
 
 CompactChordSymbols = {}
 #(define DenemoTransposeStep 0)
@@ -18,7 +16,7 @@ AutoEndMovementBarline = \bar "|."
 % The music follows
 
 MvmntIVoiceI = {
-  CONTENTSCOREHERE
+  a4 b c d e f r4 r4
 
 }
 %Default Score Layout
@@ -30,6 +28,7 @@ MvmntIVoiceI = {
 tagline = \markup {"" on \simple #(strftime "%x" (localtime (current-time)))}
 
         }
+#(set-default-paper-size "tabloid")
 
 
 
@@ -44,7 +43,7 @@ tagline = \markup {"" on \simple #(strftime "%x" (localtime (current-time)))}
 %Start of Staff
 \new Staff = "Part 1"  << 
  \new Voice = "MvmntIVoiceI"  { 
-  \clef treble    \key KEYSCOREHERE    \time TIMESCOREHERE   \MvmntIVoiceI
+  \clef treble    \key c\major    \time 4/4   \MvmntIVoiceI
                         } %End of voice
 
                         >> %End of Staff

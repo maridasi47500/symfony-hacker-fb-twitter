@@ -1,3 +1,48 @@
+<?php
+
+declare(strict_types=1);
+namespace App\Controller;
+
+use App\Form\Type\TaskType;
+
+use App\Entity\ScoreToSend;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
+
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Attribute\Route;
+
+class TaskController extends AbstractController
+{
+
+    #[Route('/product/{id}', name: 'task_success')]
+    public function show(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $product = $entityManager->getRepository(ScoreToSend::class)->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+        //return new Response('Check out this great product: '.$product->getTimeSignature());
+
+        // or render a template
+        // in the template, print things with {{ product.name }}
+        return $this->render('task/show.html.twig', ['product' => $product]);
+    }
+
+
+    #[Route('/task', name: "blog_list")]
+    public function new(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // creates a task object and initializes some data for this example
         $task = new ScoreToSend();
         $task->setTimeSignature('4/4');
         $task->setKeySignature('c major');
@@ -6,3 +51,61 @@
         $task->setLon('x');
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // $form->getData() holds the submitted values
+            // but, the original `$task` variable has also been updated
+            $task = $form->getData();
+            $task->setPic('pic_of_the_score');
+	    $entityManager->persist($task);
+	    $entityManager->flush();
+	    $myid=$task->getId();
+	    $file_pointer = fopen(__DIR__ . "/../../samplescoreexample.ly", "r") or die("Unable to open file!");
+            $contents= fread($file_pointer, filesize(__DIR__ . "/../../samplescoreexample.ly"));
+            fclose($file_pointer);
+	    //echo str_replace("world", "Peter", "Hello world!");
+	    $contents= str_replace("KEYSCOREHERE", str_replace(" ", "\\", $task->getKeySignature()), $contents);
+	    $contents= str_replace("TIMESCOREHERE", $task->getTimeSignature(), $contents);
+	    $contents= str_replace("CONTENTSCOREHERE", $task->getMyscore(), $contents);
+            $myfile = fopen(__DIR__ . "/../../public/scores/scoretosend_myscore_sample_". $myid . ".ly", "w") or die("Unable to open file!");
+            fwrite($myfile, $contents);
+            fclose($myfile);
+            $myfile = fopen(__DIR__ . "/../../public/scores/scoretosend_myscore_sample_". $myid . ".html", "w") or die("Unable to open file!");
+            fwrite($myfile, "<lilypond staffsize=34>" . $contents . "</lilypond>");
+            fclose($myfile);
+
+            ob_start();
+
+
+	    
+            $p1=["lilypond", "-dclip-systems", "--png", __DIR__ . "/../../public/scores/scoretosend_myscore_sample_" . $myid . ".ly"];
+	    
+
+            $dir = shell_exec(join(" ", $p1));
+            if (is_null($dir))
+            {
+		    echo "hop";
+	    } else {
+		    echo "hopopop";
+            $realpicvalue= "scoretosend_myscore_sample_" . $myid . ".png";
+            $task = $entityManager->getRepository(ScoreToSend::class)->find($myid);
+		    
+            $task->setPic($realpicvalue);
+	    $entityManager->flush();
+
+	    }
+
+            ob_end_clean();   // get rid of the evidence :-)
+            return $this->redirectToRoute('task_success', ["id" => $myid]);
+
+            // ... perform some action, such as saving the task to the database
+
+
+
+        }
+
+        return $this->render('task/new.html.twig', [
+            'form' => $form,
+        ]);
+
+    }
+}
