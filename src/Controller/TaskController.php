@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 namespace App\Controller;
 
 use App\Form\Type\TaskType;
@@ -38,13 +39,16 @@ class TaskController extends AbstractController
     }
 
 
-    #[Route('/task')]
+    #[Route('/task', name: "blog_list")]
     public function new(EntityManagerInterface $entityManager, Request $request): Response
     {
         // creates a task object and initializes some data for this example
         $task = new ScoreToSend();
-        $task->setTimeSignature('Write a blog post');
-        $task->setKeySignature('tomorrow');
+        $task->setTimeSignature('4/4');
+        $task->setKeySignature('c major');
+        $task->setPic('x');
+        $task->setLat('x');
+        $task->setLon('x');
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -55,21 +59,21 @@ class TaskController extends AbstractController
 	    $entityManager->persist($task);
 	    $entityManager->flush();
 	    $myid=$task->getId();
-	    $file_pointer = fopen("./samplescoreexample.ly", "r") or die("Unable to open file!");
-            $contents= fread($file_pointer, filesize("./samplescoreexample.ly"));
+	    $file_pointer = fopen(__DIR__ . "/../../samplescoreexample.ly", "r") or die("Unable to open file!");
+            $contents= fread($file_pointer, filesize(__DIR__ . "/../../samplescoreexample.ly"));
             fclose($file_pointer);
 	    //echo str_replace("world", "Peter", "Hello world!");
 	    $contents= str_replace("KEYSCOREHERE", str_replace(" ", "\\", $task->getKeySignature()), $contents);
 	    $contents= str_replace("TIMESCOREHERE", $task->getTimeSignature(), $contents);
 	    $contents= str_replace("CONTENTSCOREHERE", $task->getMyscore(), $contents);
-            $myfile = fopen("./public/scores/scoretosend_myscore_sample_". $myid . ".ly", "w") or die("Unable to open file!");
+            $myfile = fopen(__DIR__ . "/../../public/scores/scoretosend_myscore_sample_". $myid . ".ly", "w") or die("Unable to open file!");
             fwrite($myfile, $contents);
             fclose($myfile);
-            $myfile = fopen("./public/scores/scoretosend_myscore_sample_". $myid . ".html", "w") or die("Unable to open file!");
+            $myfile = fopen(__DIR__ . "/../../public/scores/scoretosend_myscore_sample_". $myid . ".html", "w") or die("Unable to open file!");
             fwrite($myfile, "<lilypond staffsize=34>" . $contents . "</lilypond>");
             fclose($myfile);
-            declare(strict_types=1);
-            $p1=["lilypond-book", "static/scores/scoretosend_myscore_sample_" . $myid . ".html", "-f", "html", "--output", "static/scores/samplescorescoretosend_myscore" . $myid] 
+
+            $p1=["lilypond-book", __DIR__ . "/../../public/scores/scoretosend_myscore_sample_" . $myid . ".html", "-f", "html", "--output", "static/scores/samplescorescoretosend_myscore" . $myid];
 	    
 
             $handle = popen(join(" ", $p1), 'r');
@@ -82,15 +86,15 @@ class TaskController extends AbstractController
             }
 
             pclose($handle);
-	    $file_pointer = fopen("public/scores/samplescorescoretosend_myscore" . $myid . "/scoretosend_myscore_sample_" . $myid . ".html", "r") or die("Unable to open file!");
-            $htmlString= fread($file_pointer, filesize("static/scores/samplescorescoretosend_myscore" . $myid . "/scoretosend_myscore_sample_" . $myid . ".html"));
+	    $file_pointer = fopen(__DIR__ . "/../../public/scores/samplescorescoretosend_myscore" . $myid . "/scoretosend_myscore_sample_" . $myid . ".html", "r") or die("Unable to open file!");
+            $htmlString= fread($file_pointer, filesize(__DIR__ . "/static/scores/samplescorescoretosend_myscore" . $myid . "/scoretosend_myscore_sample_" . $myid . ".html"));
             fclose($file_pointer);
             $doc = new DOMDocument();
             $doc->loadHTML($htmlString);
             $xpath = new DOMXPath($doc);
 
             $titles = $xpath->evaluate('//img');
-	    $picvalue=""
+	    $picvalue="";
             foreach ($titles as $title) {
                 $picvalue= $title->src . PHP_EOL;
                 echo $title->src . PHP_EOL;

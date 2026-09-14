@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 
 class TaskType extends AbstractType
@@ -15,7 +16,9 @@ class TaskType extends AbstractType
         $builder
             ->add('time_signature', TextType::class)
             ->add('key_signature', TextType::class)
-            ->add('pic', TextType::class)
+            ->add('pic', HiddenType::class)
+            ->add('lat', HiddenType::class)
+            ->add('lon', HiddenType::class)
             ->add('myscore', TextType::class)
             ->add('sender_name', TextType::class)
             ->add('receiver_name', TextType::class)
