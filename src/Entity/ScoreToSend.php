@@ -1,0 +1,155 @@
+<?php
+
+namespace App\Entity;
+
+use App\Repository\ScoreToSendRepository;
+use Doctrine\ORM\Mapping as ORM;
+
+#[ORM\Entity(repositoryClass: ScoreToSendRepository::class)]
+class ScoreToSend
+{
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $time_signature = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $key_signature = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $myscore = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $pic = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $sender_name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $receiver_name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $receiver_email = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lat = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $lon = null;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTimeSignature(): ?string
+    {
+        return $this->time_signature;
+    }
+
+    public function setTimeSignature(string $time_signature): static
+    {
+        $this->time_signature = $time_signature;
+
+        return $this;
+    }
+
+    public function getKeySignature(): ?string
+    {
+        return $this->key_signature;
+    }
+
+    public function setKeySignature(string $key_signature): static
+    {
+        $this->key_signature = $key_signature;
+
+        return $this;
+    }
+
+    public function getMyscore(): ?string
+    {
+        return $this->myscore;
+    }
+
+    public function setMyscore(string $myscore): static
+    {
+        $this->myscore = $myscore;
+
+        return $this;
+    }
+
+    public function getPic(): ?string
+    {
+        return $this->pic;
+    }
+
+    public function setPic(string $pic): static
+    {
+        $this->pic = $pic;
+
+        return $this;
+    }
+
+    public function getSenderName(): ?string
+    {
+        return $this->sender_name;
+    }
+
+    public function setSenderName(string $sender_name): static
+    {
+        $this->sender_name = $sender_name;
+
+        return $this;
+    }
+
+    public function getReceiverName(): ?string
+    {
+        return $this->receiver_name;
+    }
+
+    public function setReceiverName(string $receiver_name): static
+    {
+        $this->receiver_name = $receiver_name;
+
+        return $this;
+    }
+
+    public function getReceiverEmail(): ?string
+    {
+        return $this->receiver_email;
+    }
+
+    public function setReceiverEmail(string $receiver_email): static
+    {
+        $this->receiver_email = $receiver_email;
+
+        return $this;
+    }
+
+    public function getLat(): ?string
+    {
+        return $this->lat;
+    }
+
+    public function setLat(string $lat): static
+    {
+        $this->lat = $lat;
+
+        return $this;
+    }
+
+    public function getLon(): ?string
+    {
+        return $this->lon;
+    }
+
+    public function setLon(string $lon): static
+    {
+        $this->lon = $lon;
+
+        return $this;
+    }
+}
