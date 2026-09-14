@@ -1,0 +1,2 @@
+<p>{{ product.time_signature }}</p>
+<p>{{ product.key_signature }}</p>

@@ -13,7 +13,7 @@ class LuckyController extends AbstractController
         $number = random_int(0, 100);
 
         return new Response(
-            '<html><body>Lucky number: '.$number.'<a href=\'/task\'>ajouter une partition de musique à envoyer</a></body></html>'
+            '<html><body>Lucky number: '.$number.'<a href=\"/task\">ajouter une partition de musique à envoyer</a></body></html>'
         );
     }
 }
