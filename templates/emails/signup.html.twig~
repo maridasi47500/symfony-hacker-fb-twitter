@@ -1,0 +1,15 @@
+{# templates/emails/signup.html.twig #}
+<h1>Hello, {{ receiver_name }}!</h1>
+
+<p>
+    I want to be part of your symphony.
+</p>
+
+<p>
+{% apply inline_css(source('@styles/email.css')) %}
+
+<img src="{{ email.image('@images/scoretosend_myscore_sample_' ~ msg.id ~ '.png') }}" alt="Logo">
+{% endapply %}
+
+    Signed Anonymous
+</p>

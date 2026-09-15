@@ -34,7 +34,11 @@ tagline = \markup {"" on \simple #(strftime "%x" (localtime (current-time)))}
 
 
 #(set-global-staff-size 42)
+
 \paper {
+
+
+
 
        }
 

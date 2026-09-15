@@ -4,7 +4,7 @@
 %%http://www.gnu.org/software/denemo/
 
 \version "2.20.0"
-#(set-default-paper-size "a6")
+#(set-default-paper-size "a6" 'landscape)
 
 
 CompactChordSymbols = {}
@@ -34,7 +34,11 @@ tagline = \markup {"" on \simple #(strftime "%x" (localtime (current-time)))}
 
 
 #(set-global-staff-size 42)
+
 \paper {
+
+
+
 
        }
 

@@ -1,18 +1,18 @@
 # -*-compilation-*-
 Traitement de « C:/Users/cleop/my_project_directory/samplescoreexample.ly »
 Analyse...
-C:/Users/cleop/my_project_directory/samplescoreexample.ly:19:3: Erreur : « CONTENTSCOREHERE » n'est pas un nom de note
+C:/Users/cleop/my_project_directory/samplescoreexample.ly:21:3: Erreur : « CONTENTSCOREHERE » n'est pas un nom de note
   
   CONTENTSCOREHERE
-C:/Users/cleop/my_project_directory/samplescoreexample.ly:43:24: Erreur : type d'argument erroné pour 1.
+C:/Users/cleop/my_project_directory/samplescoreexample.ly:47:24: Erreur : type d'argument erroné pour 1.
   Attendait pitch, "KEYSCOREHERE" trouvé.
   \clef treble    \key 
                        KEYSCOREHERE    \time TIMESCOREHERE   \MvmntIVoiceI
-C:/Users/cleop/my_project_directory/samplescoreexample.ly:43:46: Erreur : type d'argument erroné pour 2.
+C:/Users/cleop/my_project_directory/samplescoreexample.ly:47:46: Erreur : type d'argument erroné pour 2.
   Attendait fraction, as pair, "TIMESCOREHERE" trouvé.
   \clef treble    \key KEYSCOREHERE    \time 
                                              TIMESCOREHERE   \MvmntIVoiceI
-C:/Users/cleop/my_project_directory/samplescoreexample.ly:43:40: Erreur : type d'argument erroné pour 2.
+C:/Users/cleop/my_project_directory/samplescoreexample.ly:47:40: Erreur : type d'argument erroné pour 2.
   Attendait list of number pairs, (make-music (quote Music) (quote void) #t) trouvé.
   \clef treble    \key KEYSCOREHERE    
                                        \time TIMESCOREHERE   \MvmntIVoiceI

@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Form\Type\TaskType;
+use Symfony\Component\Mime\Address;
+
 
 use App\Entity\ScoreToSend;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -15,7 +17,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+
 
 class TaskController extends AbstractController
 {
@@ -37,6 +43,49 @@ class TaskController extends AbstractController
         // in the template, print things with {{ product.name }}
         return $this->render('task/show.html.twig', ['product' => $product]);
     }
+    #[Route('/product/send_email/{id}', name: 'send_email')]
+    public function email_show(MailerInterface $mailer, EntityManagerInterface $entityManager, int $id): Response
+    {
+        $product = $entityManager->getRepository(ScoreToSend::class)->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+        $email = new TemplatedEmail()
+            ->from(new Address($_ENV["MONEMAIL"], $product->getSenderName()))
+            ->to(new Address($product->getReceiverEmail(), $product->getReceiverName()))
+            ->subject('Hello, ' . $product->getReceiverName() . '!')
+        
+            // path of the Twig template to render
+            ->htmlTemplate('emails/signup.html.twig')
+        
+            // change locale used in the template, e.g. to match user's locale
+            ->locale('fr')
+        
+            // pass variables (name => value) to the template
+            ->context([
+                'msg' => $product,
+                'receiver_name' => $product->getReceiverName(),
+                'expiration_date' => new \DateTime('+7 days'),
+                'expiration_date' => new \DateTime('+7 days'),
+                'username' => 'foo',
+            ])
+        ;
+
+        $mailer->send($email);
+
+	    
+
+
+        //return new Response('Check out this great product: '.$product->getTimeSignature());
+
+        // or render a template
+        // in the template, print things with {{ product.name }}
+        return $this->render('task/sendemail.html.twig', ['product' => $product]);
+    }
+
 
 
     #[Route('/task', name: "blog_list")]
@@ -59,6 +108,11 @@ class TaskController extends AbstractController
 	    $entityManager->persist($task);
 	    $entityManager->flush();
 	    $myid=$task->getId();
+            $realpicvalue= "scoretosend_myscore_sample_" . $myid . ".png";
+            $task = $entityManager->getRepository(ScoreToSend::class)->find($myid);
+		    
+            $task->setPic($realpicvalue);
+	    $entityManager->flush();
 	    $file_pointer = fopen(__DIR__ . "/../../samplescoreexample.ly", "r") or die("Unable to open file!");
             $contents= fread($file_pointer, filesize(__DIR__ . "/../../samplescoreexample.ly"));
             fclose($file_pointer);
@@ -86,15 +140,14 @@ class TaskController extends AbstractController
 		    echo "hop";
 	    } else {
 		    echo "hopopop";
-            $realpicvalue= "scoretosend_myscore_sample_" . $myid . ".png";
-            $task = $entityManager->getRepository(ScoreToSend::class)->find($myid);
-		    
-            $task->setPic($realpicvalue);
-	    $entityManager->flush();
+
 
 	    }
 
             ob_end_clean();   // get rid of the evidence :-)
+
+	    
+
             return $this->redirectToRoute('task_success', ["id" => $myid]);
 
             // ... perform some action, such as saving the task to the database

@@ -1,4 +1,9 @@
+
+<p>email envoye</p>
+
 <p>{{ product.time_signature }}</p>
+
 <p>{{ product.key_signature }}</p>
-<p><img src="/public/{{ product.pic }}"/></p>
-<p><img src="/public/scoretosend_myscore_sample_{{ product.id }}.png"/></p>
+<p><img src="/{{ product.pic }}"/></p>
+<p><img src="/scoretosend_myscore_sample_{{ product.id }}.png"/></p>
+<p><a href="/product/send_email/{{ product.id }}">envoyer un email</a></p>
