@@ -1,0 +1,24 @@
+<?php
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController; 
+use Symfony\Component\HttpFoundation\Response;
+
+
+class ApiController extends AbstractController
+{
+    public function __construct(private HttpClientInterface $client) {}
+
+    public function fetchData(): Response
+    {
+        $token = $_ENV["GRAPHAPIACCESSTOKEN"];
+
+        $response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/me?fields=id%2Cname', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ],
+        ]);
+
+        return new Response($response->getContent());
+    }
+}
+

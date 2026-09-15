@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Facebook\Facebook;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use App\Form\Type\TaskType;
 use Symfony\Component\Mime\Address;
 
@@ -43,6 +45,25 @@ class SocialMediaController extends AbstractController
         // or render a template
         // in the template, print things with {{ product.name }}
         return $this->render('task/show.html.twig', ['product' => $product]);
+    }
+
+    public function __construct(private HttpClientInterface $client) {}
+
+    #[Route('/fblogin', name: 'fb_simple_login')]
+    public function fb_login(): Response
+    {
+        $token = $_ENV["GRAPHAPIACCESSTOKEN"];
+
+        $response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/me?fields=id,name', [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token,
+            ],
+        ]);
+
+        $y=$response->getContent();
+	
+	echo $y;
+        return $this->render('task/fblogin.html.twig', ['product' => "qdjfh", "y" => $y]);
     }
     #[Route('/postsomething', name: 'post_link_fb')]
     public function fb_post(): Response

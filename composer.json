@@ -17,6 +17,7 @@
         "symfony/form": "8.1.*",
         "symfony/framework-bundle": "8.1.*",
         "symfony/google-mailer": "8.1.*",
+        "symfony/http-client": "8.1.*",
         "symfony/mailer": "8.1.*",
         "symfony/runtime": "8.1.*",
         "symfony/twig-bundle": "8.1.*",
