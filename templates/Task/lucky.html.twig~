@@ -1,0 +1,14 @@
+<html><body>
+
+Lucky number: {{number}}
+
+<div class='actions'>
+
+<a href='/task'>ajouter une partition de musique à envoyer</a>
+</div>
+<div hidden class='socialactions'>
+<h2>social actions ne sont pas disponibles sur le serveur local</h2>
+
+<a href="/postsomething">post a link on facebook</a><a href="{{loginurl }}">Log in with Facebook!</a></div>
+
+</body></html>
