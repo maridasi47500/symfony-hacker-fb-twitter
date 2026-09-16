@@ -10,4 +10,4 @@
 ###< symfony/framework-bundle ###
 public/score**
 public/scores/
-.env
+/.env
