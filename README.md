@@ -12,3 +12,4 @@ MYFAVFBPAGEACCESSTOKEN="")
 
 MAILER_DSN=gmail+smtp://username:apppassword@default
 MONEMAIL=""
+"# symfony-hacker-fb-twitter" 
