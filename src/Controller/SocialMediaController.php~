@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 namespace App\Controller;
+use App\Entity\FbPagePost;
+
 
 use Facebook\Facebook;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 
 use App\Form\Type\TaskType;
 use Symfony\Component\Mime\Address;
@@ -29,6 +32,54 @@ use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 class SocialMediaController extends AbstractController
 {
 
+    #[Route('/facebook_media/delete/{id}', name: 'fb_post_delete')]
+    public function fb_post_delete(Request $request, EntityManagerInterface $entityManager, int $id): Response
+    {
+        $product = $entityManager->getRepository(FbPagePost::class)->find($id);
+        $token = $_ENV["MYFAVFBPAGEACCESSTOKEN"];
+        $data = ["access_token" => $token];
+        $response = $this->client->request('DELETE', 'https://graph.facebook.com/v26.0/' . $product->getPostId(), [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                //'Authorization' => 'Bearer ' . $token,
+            ],
+	    'json' => $data,
+        ]);
+
+        $y=$response->getContent();
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+        //return new Response('Check out this great product: '.$product->getTimeSignature());
+
+        // or render a template
+        // in the template, print things with {{ product.name }}
+        $entityManager->remove($product);
+        $entityManager->flush();
+	
+        return $this->render('task/seefbpostdeleted.html.twig', ['product' => $product]);
+    }
+    #[Route('/facebook_media/{id}', name: 'fb_post_success')]
+    public function fb_post_show(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $product = $entityManager->getRepository(FbPagePost::class)->find($id);
+
+        if (!$product) {
+            throw $this->createNotFoundException(
+                'No product found for id '.$id
+            );
+        }
+
+        //return new Response('Check out this great product: '.$product->getTimeSignature());
+
+        // or render a template
+        // in the template, print things with {{ product.name }}
+        return $this->render('task/seefbpost.html.twig', ['product' => $product]);
+    }
     #[Route('/social/{id}', name: 'social_success')]
     public function social_show(EntityManagerInterface $entityManager, int $id): Response
     {
@@ -48,13 +99,107 @@ class SocialMediaController extends AbstractController
     }
 
     public function __construct(private HttpClientInterface $client) {}
+    #[Route('/fbpostupdate', name: 'fb_post_update')]
+    public function fb_post_update(EntityManagerInterface $entityManager, Request $request): Response
+    {
 
+        $texttopost = $request->query->get('texttopost');
+
+	
+        $id = $request->query->get('myid');
+        $product = $entityManager->getRepository(FbPagePost::class)->find($id);
+	if (empty ($texttopost) || strlen($texttopost) == 0){
+		$texttopost=$product->getContent();
+	}
+        $product->setContent($texttopost);
+        $entityManager->flush();
+        $token = $_ENV["MYFAVFBPAGEACCESSTOKEN"];
+        $data = ["access_token" => $token, "message" => $texttopost];
+        $response = $this->client->request('POST', 'https://graph.facebook.com/v26.0/' . $product.getPostId(), [
+        //$response = $this->client->request('POST', 'https://graph.facebook.com/v26.0/me/feed', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                //'Authorization' => 'Bearer ' . $token,
+            ],
+	    'json' => $data,
+        ]);
+
+        $y=$response->getContent();
+	
+	echo $y;
+
+        //return $this->render('task/fblogin.html.twig', ['product' => "qdjfh", "y" => $y]);
+	// check if the route works or
+        return $this->redirectToRoute('fb_post_success', ["id" => $id]);
+
+    }
+
+    #[Route('/fbpostcontent', name: 'fb_post_content')]
+    public function fb_post_content(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $texttopost = $request->query->get('texttopost');
+	if (empty ($texttopost) || strlen($texttopost) == 0){
+		$texttopost="et voilà ! j'ai posté quelque chose, comment vas tu?";
+	}
+        $token = $_ENV["MYFAVFBPAGEACCESSTOKEN"];
+        $data = ["access_token" => $token, "message" => $texttopost];
+        $response = $this->client->request('POST', 'https://graph.facebook.com/v26.0/' . $_ENV['MYFAVFBPAGEID'] . '/feed', [
+        //$response = $this->client->request('POST', 'https://graph.facebook.com/v26.0/me/feed', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                //'Authorization' => 'Bearer ' . $token,
+            ],
+	    'json' => $data,
+        ]);
+
+        $y=$response->getContent();
+	
+	echo $y;
+	$postid=json_decode($y, true)["id"];
+	$mypost=new FbPagePost();
+	$mypost->setContent($texttopost);
+	$mypost->setPostId($postid);
+	$entityManager->persist($mypost);
+	$entityManager->flush();
+	$myid=$mypost->getId();
+
+        //return $this->render('task/fblogin.html.twig', ['product' => "qdjfh", "y" => $y]);
+	// check if the route works or
+        return $this->redirectToRoute('fb_post_success', ["id" => $myid]);
+
+    }
+    #[Route('/getfacebookpageid', name: 'fb_page_id')]
+    public function fb_page_id(): Response
+    {
+        $token = $_ENV["GRAPHAPIACCESSTOKEN"];
+        $token1 = $_ENV["GRAPHAPIACCESSTOKENAPP"];
+        $token2 = $_ENV["GRAPHAPIACCESSTOKENPAGE"];
+        $token3 = $_ENV["GRAPHAPIACCESSTOKENUSER"];
+	$user_id = $_ENV['FB_USER_ID'];
+	$token4 = $_ENV['APP_SECRET'];
+
+	//$user_id = $_ENV['FACEBOOK_APP_ID'];
+
+	//$response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/' . $user_id . '/accounts?access_token=' . $token3, [
+	//$response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/' . $user_id . '/accounts', [
+	$response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/me/accounts', [
+		//access_token=' . $token3, [
+            'headers' => [
+                'Authorization' => 'Bearer ' . $token3,
+            ],
+        ]);
+
+        $y=$response->getContent();
+	
+	echo $y;
+        return $this->render('task/pageid.html.twig', [ "pageidstring" => $y, "pageaccesstoken" => json_decode($y, true)["data"][0]["access_token"], "pagename" => json_decode($y, true)["data"][0]["name"], "pageid" => json_decode($y, true)["data"][0]["id"]]);
+    }
     #[Route('/fblogin', name: 'fb_simple_login')]
     public function fb_login(): Response
     {
         $token = $_ENV["GRAPHAPIACCESSTOKEN"];
 
-        $response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/me?fields=id%2Cname', [
+        $response = $this->client->request('GET', 'https://graph.facebook.com/v26.0/me?fields=id,name', [
             'headers' => [
                 'Authorization' => 'Bearer ' . $token,
             ],

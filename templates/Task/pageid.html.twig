@@ -1,0 +1,18 @@
+<p>your page id for facebook is <input readonly="readonly" value="{{ pageidstring }}"/></p>
+<p>si tu veux poster dans la page {{pagename}} ajoute dans tes variables d'environnement <code>MYFAVFBPAGEID="{{ pageid}}"</code></p>
+<p>ajoute aussi <code>MYFAVFBPAGEACCESSTOKEN="{{ pageaccesstoken}}"</code></p>
+<div>
+<form action="/fbpostcontent" id="myfbform">
+<div class="fields">
+<label for="mypostnew">texte à poster sur facebook</label>
+<textarea name="texttopost" placeholder="ecris quelque chose ici">
+</textarea>
+</div>
+</form>
+
+</div>
+<p>tu peux essayer de <a href="/fbpostcontent" onclick="myfbform.submit();return false;">poster quelque chose sur ta page facebook</a>(If posting to a page, \
+          requires both pages_read_engagement and pages_manage_posts as an admin with \
+          sufficient administrative permission)</p>
+
+

@@ -1,5 +1,5 @@
 {% extends "base.html.twig" %}
-{%block body%}
+{%block content%}
 <p>login</p>
 <div>
 <form action="/fbpostcontent" id="myfbform">

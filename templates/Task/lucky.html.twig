@@ -2,16 +2,31 @@
 
 Lucky number: {{number}}
 
+<h2>Musique</h2>
 <div class='actions'>
 
 <a href='/task'>ajouter une partition de musique à envoyer</a>
 </div>
+<h2>Reseaux sociaux</h2>
+<p>facebook, twitter, instagram, youtube..</p>
 <div class='socialactions'>
-<h2>social actions ne sont pas disponibles sur le serveur local</h2>
 
-<a href="/fblogin">autre  login sur facebook avec graph </a>
+<ul>
+<li>pour commencer, <a href="/getfacebookpageid">obtiens l'id de la page facebook ou tu veux publier quelque chose (refresh your USER token in facebook graph api) </a></li>
+</ul>
+<ul hidden>
+<li><a href="/fblogin">autre  login sur facebook avec graph </a></li>
 
-<a href="{{loginurl }}">Log in with Facebook!</a></div>
-<a href="/postsomething">post a link on facebook</a><a href="{{loginurl }}">Log in with Facebook!</a></div>
+<li><a href="{{loginurl }}">Log in with Facebook!</a></li>
+<li><a href="/postsomething">post a link on facebook</a><a href="{{loginurl }}">Log in with Facebook!</a></li>
+
+
+<li><a href="/fbpostcontent">post something on your facebook page</a>
+</li>
+<li><a href="{{loginurl }}">Log in with Facebook!</a></li>
+</ul>
+
+</div>
+<h2>Disco/musique</h2>
 
 </body></html>

@@ -1,0 +1,18 @@
+
+{% extends "base.html.twig" %}
+{%block body%}
+
+<p>vous avez supprime un message avec le contenu "{{ product.content }}"</p>
+<h2>publier un nouveau message</h2>
+<div>
+<form action="/fbpostcontent" id="myfbform">
+<div class="fields">
+<label for="mypostnew">texte à poster sur facebook</label>
+<textarea name="texttopost" placeholder="ecris quelque chose ici">
+</textarea>
+</div>
+</form>
+
+</div>
+<p><a href="/fbpostcontent" onclick="myfbform.submit();return false;">publier</a></p>
+{%endblock %}

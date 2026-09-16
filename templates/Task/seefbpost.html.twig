@@ -1,0 +1,29 @@
+
+{% extends "base.html.twig" %}
+{%block body%}
+
+<p>vous avez publié sur votre page facebook un message avec le contenu "{{ product.content }}"</p>
+<p>voulez vous
+<form action="/fbpostupdate" id="updatefbform">
+<div class="fields">
+<input type="hidden" value="{{product.id}}" name="myid"/>
+<label for="mypostupdate">texte à poster sur facebook</label>
+<textarea name="texttopost" id="mypostupdate" placeholder="ecris quelque chose ici">
+</textarea>
+</div>
+</form>
+
+ <a href="/fbpostcontent" onclick="updatefbform.submit();return false;">le modifier</a> ou <a href="/facebook_media/delete/{{ product.id }}">le supprimer</a> ?</p>
+<h2>publier un nouveau message</h2>
+<div>
+<form action="/fbpostcontent" id="myfbform">
+<div class="fields">
+<label for="mypostnew">texte à poster sur facebook</label>
+<textarea name="texttopost" placeholder="ecris quelque chose ici">
+</textarea>
+</div>
+</form>
+
+</div>
+<p><a href="/fbpostcontent" onclick="myfbform.submit();return false;">publier</a></p>
+{%endblock %}
