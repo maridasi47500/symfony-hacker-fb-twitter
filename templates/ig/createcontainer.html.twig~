@@ -1,0 +1,14 @@
+<p id="myid">{{ product}}</p>
+<h2>envoie une video</h2>
+{{ form }}
+<!--
+<form action="/ig_upload_vid" method="post">
+<div class="field">
+<label for="brochure">upload a vid</label>
+<input type="file" name="brochure" id="brochure"/>
+</div>
+<div class="actions">
+<input type="submit" value="Upload"/>
+</div>
+</form>
+-->

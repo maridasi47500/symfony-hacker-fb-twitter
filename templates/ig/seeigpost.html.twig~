@@ -1,0 +1,3 @@
+<img src="/uploads/brochures/{{product_media_name}}" width="200" height="200"/>
+<br>
+{{product_container_id}}

@@ -12,7 +12,7 @@ Lucky number: {{number}}
 <div class='socialactions'>
 
 <ul>
-<li>pour commencer, <a href="/getfacebookpageid">obtiens l'id de la page facebook ou tu veux publier quelque chose  </a></li>
+<li>pour commencer, <a href="/getfacebookpageid">obtiens l'id de la page facebook ou tu veux publier quelque chose (refresh your USER token in facebook graph api) </a></li>
 </ul>
 <ul hidden>
 <li><a href="/fblogin">autre  login sur facebook avec graph </a></li>

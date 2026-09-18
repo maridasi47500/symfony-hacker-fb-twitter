@@ -15,4 +15,9 @@ blog_list:
     # the controller value has the format 'controller_class::method_name'
     controller: App\Controller\TaskController::new
     methods: GET|POST
+my_blog_list:
+    path: /ig_upload_vid
+    # the controller value has the format 'controller_class::method_name'
+    controller: App\Controller\InstagramController::upload
+    methods: GET|POST
 
